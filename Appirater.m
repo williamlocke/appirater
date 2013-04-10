@@ -73,7 +73,7 @@ static BOOL _modalOpen = false;
 - (void)hideRatingAlert;
 @end
 
-@implementation Appirater 
+@implementation Appirater
 
 @synthesize ratingAlert;
 
@@ -156,7 +156,7 @@ static BOOL _modalOpen = false;
             appirater = [[Appirater alloc] init];
 			appirater.delegate = _delegate;
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillResignActive) name:
-                UIApplicationWillResignActiveNotification object:nil];
+             UIApplicationWillResignActiveNotification object:nil];
         });
 	}
 	
@@ -164,11 +164,12 @@ static BOOL _modalOpen = false;
 }
 
 - (void)showRatingAlert {
+    
 	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:APPIRATER_MESSAGE_TITLE
-														 message:APPIRATER_MESSAGE
-														delegate:self
-											   cancelButtonTitle:APPIRATER_CANCEL_BUTTON
-											   otherButtonTitles:APPIRATER_RATE_BUTTON, APPIRATER_RATE_LATER, nil];
+                                                        message:APPIRATER_MESSAGE
+                                                       delegate:self
+                                              cancelButtonTitle:APPIRATER_CANCEL_BUTTON
+                                              otherButtonTitles:APPIRATER_RATE_BUTTON, nil];
 	self.ratingAlert = alertView;
 	[alertView show];
 	
@@ -365,7 +366,7 @@ static BOOL _modalOpen = false;
 		if (_debug)
 			NSLog(@"APPIRATER Hiding Alert");
 		[self.ratingAlert dismissWithClickedButtonIndex:-1 animated:NO];
-	}	
+	}
 }
 
 + (void)appWillResignActive {
@@ -438,7 +439,7 @@ static BOOL _modalOpen = false;
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 	[userDefaults setBool:YES forKey:kAppiraterRatedCurrentVersion];
 	[userDefaults synchronize];
-
+    
 	//Use the in-app StoreKit view if available (iOS 6) and imported. This works in the simulator.
 	if (!_openInAppStore && NSStringFromClass([SKStoreProductViewController class]) != nil) {
 		
@@ -450,21 +451,23 @@ static BOOL _modalOpen = false;
 			[self.sharedInstance.delegate appiraterWillPresentModalView:self.sharedInstance animated:_usesAnimation];
 		}
 		[[self getRootViewController] presentViewController:storeViewController animated:_usesAnimation completion:^{
+            
 			[self setModalOpen:YES];
 			//Temporarily use a black status bar to match the StoreKit view.
 			[self setStatusBarStyle:[UIApplication sharedApplication].statusBarStyle];
 			[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:_usesAnimation];
+            
 		}];
-	
-	//Use the standard openUrl method if StoreKit is unavailable.
+        
+        //Use the standard openUrl method if StoreKit is unavailable.
 	} else {
 		
-		#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
 		NSLog(@"APPIRATER NOTE: iTunes App Store is not supported on the iOS simulator. Unable to open App Store page.");
-		#else
+#else
 		NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%@", _appId]];
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
-		#endif
+#endif
 	}
 }
 

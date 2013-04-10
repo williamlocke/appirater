@@ -46,28 +46,24 @@ extern NSString *const kAppiraterRatedCurrentVersion;
 extern NSString *const kAppiraterDeclinedToRate;
 extern NSString *const kAppiraterReminderRequestDate;
 
-/*
- Your localized app's name.
- */
-#define APPIRATER_LOCALIZED_APP_NAME    [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"]
+
 
 /*
  Your app's name.
  */
-#define APPIRATER_APP_NAME				APPIRATER_LOCALIZED_APP_NAME ? APPIRATER_LOCALIZED_APP_NAME : [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]
+#define APPIRATER_APP_NAME	[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"]
 
 /*
  This is the message your users will see once they've passed the day+launches
  threshold.
  */
-#define APPIRATER_LOCALIZED_MESSAGE     NSLocalizedStringFromTable(@"If you enjoy using %@, would you mind taking a moment to rate it? It won't take more than a minute. Thanks for your support!", @"AppiraterLocalizable", nil)
-#define APPIRATER_MESSAGE				[NSString stringWithFormat:APPIRATER_LOCALIZED_MESSAGE, APPIRATER_APP_NAME]
+#define APPIRATER_LOCALIZED_MESSAGE     NSLocalizedStringFromTable(@"If you're enjoying %@, perhaps consider rating us 5 stars in the App Store. Thanks for your support!", @"AppiraterLocalizable", nil)
+#define APPIRATER_MESSAGE				[NSString stringWithFormat:@"If you're enjoying %@, perhaps consider rating us 5 stars in the App Store.", APPIRATER_APP_NAME]
 
 /*
  This is the title of the message alert that users will see.
  */
-#define APPIRATER_LOCALIZED_MESSAGE_TITLE   NSLocalizedStringFromTable(@"Rate %@", @"AppiraterLocalizable", nil)
-#define APPIRATER_MESSAGE_TITLE             [NSString stringWithFormat:APPIRATER_LOCALIZED_MESSAGE_TITLE, APPIRATER_APP_NAME]
+#define APPIRATER_MESSAGE_TITLE             [NSString stringWithFormat:@"Recommend %@", APPIRATER_APP_NAME]
 
 /*
  The text of the button that rejects reviewing the app.
@@ -77,8 +73,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 /*
  Text of button that will send user to app review page.
  */
-#define APPIRATER_LOCALIZED_RATE_BUTTON NSLocalizedStringFromTable(@"Rate %@", @"AppiraterLocalizable", nil)
-#define APPIRATER_RATE_BUTTON			[NSString stringWithFormat:APPIRATER_LOCALIZED_RATE_BUTTON, APPIRATER_APP_NAME]
+#define APPIRATER_RATE_BUTTON			[NSString stringWithFormat:@"Rate 5 Stars!"]
 
 /*
  Text for button to remind the user to review later.
@@ -86,7 +81,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 #define APPIRATER_RATE_LATER			NSLocalizedStringFromTable(@"Remind me later", @"AppiraterLocalizable", nil)
 
 @interface Appirater : NSObject <UIAlertViewDelegate, SKStoreProductViewControllerDelegate> {
-
+    
 	UIAlertView		*ratingAlert;
 }
 
@@ -96,6 +91,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 #else
 @property(nonatomic, unsafe_unretained) NSObject <AppiraterDelegate> *delegate;
 #endif
+
 
 /*
  Tells Appirater that the app has launched, and on devices that do NOT
@@ -156,7 +152,7 @@ extern NSString *const kAppiraterReminderRequestDate;
  Tells Appirater to open the App Store page where the user can specify a
  rating for the app. Also records the fact that this has happened, so the
  user won't be prompted again to rate the app.
-
+ 
  The only case where you should call this directly is if your app has an
  explicit "Rate this app" command somewhere.  In all other cases, don't worry
  about calling this -- instead, just call the other functions listed above,
@@ -167,7 +163,7 @@ extern NSString *const kAppiraterReminderRequestDate;
 
 /*
  Tells Appirater to immediately close any open rating modals (e.g. StoreKit rating VCs).
-*/
+ */
 + (void)closeModal;
 
 @end
@@ -250,6 +246,6 @@ extern NSString *const kAppiraterReminderRequestDate;
  
  Calls [Appirater appLaunched:YES]. See appLaunched: for details of functionality.
  */
-+ (void)appLaunched __attribute__((deprecated)); 
++ (void)appLaunched __attribute__((deprecated));
 
 @end
